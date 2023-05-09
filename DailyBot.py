@@ -3,6 +3,7 @@ import Twitter
 import random
 
 if __name__ == "__main__":
+    # go once per day
     songs_list = Spotify.load_data()
 
     random_song = random.choice(songs_list)
