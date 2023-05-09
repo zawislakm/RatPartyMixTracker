@@ -80,22 +80,25 @@ def get_playlist_elements(token: str) -> list:
     return songs
 
 
-def get_from_list(songs: list) -> list:
+def song_dict_small(song: dict) -> dict:
+    artist_list = []
+    for artist in song['track']['artists']:
+        artist_list.append(artist['name'])
+    song_dict = {
+        'name': song['track']['name'],  # Nazwa utworu
+        'artists': artist_list,  # Lista wykonawców
+        'song_link': song['track']['external_urls']['spotify'],  # Link do utworu w serwisie Spotify
+        'photo_link': song['track']['album']['images'][0]['url'],  # Link do zdjęcia okładki albumu
+        'popularity': song['track']['popularity']  # Popularność utworu
+    }
+    return song_dict
 
+
+def get_from_list(songs: list) -> list:
     info = []
     for song in songs:
-        artist_list = []
-        for artist in song['track']['artists']:
-            artist_list.append(artist['name'])
-        dict = {
-            'name': song['track']['name'],  # Nazwa utworu
-            'artists': artist_list,  # Lista wykonawców
-            'song_link': song['track']['external_urls']['spotify'],  # Link do utworu w serwisie Spotify
-            'photo_link': song['track']['album']['images'][0]['url'],  # Link do zdjęcia okładki albumu
-            'popularity': song['track']['popularity']  # Popularność utworu
-        }
+        info.append(song_dict_small(song))
 
-        info.append(dict)
     info.sort(key=lambda x: x['popularity'], reverse=True)
 
     return info
@@ -112,6 +115,7 @@ def work_script() -> (list, list):
     removed_ready = get_from_list(removed)
     added_ready = get_from_list(added)
     save_data(new_data)
+
     return removed_ready, added_ready
 
 
