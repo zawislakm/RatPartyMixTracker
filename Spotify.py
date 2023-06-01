@@ -51,12 +51,12 @@ def get_playlist_elements(token: str) -> list:
         for track in response_json['items']:
             songs.append(track)
 
-        # Przejście do kolejnej strony
+        # next response page
         url = response_json['next']
         response = requests.get(url, headers=headers)
         response_json = response.json()
     else:
-        # osotania strona
+        # last page
         for track in response_json['items']:
             songs.append(track)
 
@@ -163,32 +163,4 @@ def work_script() -> (list, list):
 if __name__ == "__main__":
     pass
 
-    # removed, added = work_script()
-    #
-    # print("Added:")
-    # print(added)
-    #
-    # print()
-    #
-    # print("Removed")
-    # print(removed)
-    # token = get_token()
-    # get_song_by_id("2UKvxuMTM7JwprZrnpxgY1",token)
 
-    # token = get_token()
-    # new_data = get_playlist_elements(token)
-    # old_data = load_data_new()
-    # #
-    # removed = get_removed_songs_new(old_data, new_data, token)
-    # added = get_added_songs_new(old_data, new_data)
-    # print("Removed: ")
-    # print(removed)
-    # print(len(removed))
-    #
-    # print()
-    #
-    # print("Added: ")
-    # print(added)
-    # print(len(added))
-    #
-    # save_data_new(new_data)
