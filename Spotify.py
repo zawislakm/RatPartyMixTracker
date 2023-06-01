@@ -11,9 +11,9 @@ load_dotenv()
 CLIENT_ID = os.getenv("CLIENT_ID")
 CLIENT_SECRET = os.getenv("CLIENT_SECRET")
 
-# RAT_PARTY_MIX_ID = os.getenv("RAT_PARTY_MIX_ID")
+RAT_PARTY_MIX_ID = os.getenv("RAT_PARTY_MIX_ID")
 
-RAT_PARTY_MIX_ID = "7llfakgLAYwUxDhRk8lYIO"
+# RAT_PARTY_MIX_ID = "7llfakgLAYwUxDhRk8lYIO"
 BOT_PATH = os.getenv("BOT_PATH")
 
 
