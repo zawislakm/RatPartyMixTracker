@@ -81,7 +81,7 @@ def daily_song_tweet(song: Spotify.Song) -> None:
 def make_tweet(text: str, song_url: str) -> None:
     if read_photo(song_url):
         media = API.media_upload(PHOTO_PATH)
-        # Client.create_tweet(text=text, media_ids=[media.media_id])
+        Client.create_tweet(text=text, media_ids=[media.media_id])
         remove_photo()
     else:
         Client.create_tweet(text=text)
