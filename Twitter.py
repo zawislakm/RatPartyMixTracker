@@ -5,6 +5,7 @@ import requests
 import json
 import random
 import Spotify
+from definitions import BOT_PATH
 
 load_dotenv()
 
@@ -19,7 +20,7 @@ Client = tweepy.Client(BEARER_TOKEN_TWITTER, API_KEY_TWITTER, API_KEY_SECRET_TWI
 auth = tweepy.OAuth1UserHandler(API_KEY_TWITTER, API_KEY_SECRET_TWITTER, ACCESS_TOKEN_TWITTER,
                                 ACCESS_TOKEN_SECRET_TWITTER)
 API = tweepy.API(auth)
-BOT_PATH: str = os.getcwd()
+# BOT_PATH: str = os.getcwd()
 PHOTO_PATH: str = os.path.join(BOT_PATH, "temp.jpg")
 
 
@@ -89,3 +90,8 @@ def make_tweet(text: str, song_url: str) -> None:
 
 if __name__ == "__main__":
     pass
+
+    mentions = API.mentions_timeline()
+
+    # for me in mentions:
+    #     print(me)

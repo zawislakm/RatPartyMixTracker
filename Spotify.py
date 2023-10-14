@@ -5,14 +5,16 @@ import os
 import base64
 from requests import post
 from datetime import datetime
+from definitions import BOT_PATH
 
 load_dotenv()
 CLIENT_ID: str = os.getenv("CLIENT_ID")
 CLIENT_SECRET: str = os.getenv("CLIENT_SECRET")
 RAT_PARTY_MIX_ID: str = os.getenv("RAT_PARTY_MIX_ID")
 
+
 # RAT_PARTY_MIX_ID: str = "7llfakgLAYwUxDhRk8lYIO"
-BOT_PATH = os.getcwd()
+# BOT_PATH = os.getcwd()
 
 
 class Spotify:
@@ -147,8 +149,6 @@ def get_playlist_elements() -> list:
     snapshots.append(snapshot_response_json['snapshot_id'])
     with open(os.path.join(BOT_PATH, "snapshots_ids.json"), "w") as file:
         json.dump(snapshots, file)
-
-
 
     return received_songs
 

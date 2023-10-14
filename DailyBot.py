@@ -1,6 +1,5 @@
 import Spotify
 import Twitter
-import random
 import Database
 
 
@@ -15,7 +14,6 @@ def random_song():
 
 
 if __name__ == "__main__":
-    # go once per day
     random_song()
 
     # token = Spotify.get_token()
