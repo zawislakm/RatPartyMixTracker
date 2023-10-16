@@ -1,13 +1,14 @@
-from flask import *
+from fastapi import FastAPI
 import json
-import Database
-app = Flask(__name__)
+from Database import get_daily_song_database
 
-@app.route('/ratpartymix/dailysong',methods=["GET"])
-def home_page():
-    data_set = {'SpotifyID': Database.get_daily_song_database()}
-    json_dump = json.dumps(data_set)
-    return json_dump
+app = FastAPI()
 
-if __name__ == '__main__':
-    app.run(port=443)
+@app.get("/ratpartymix/dailysong")
+async def home_page():
+    data_set = {'SpotifyID': get_daily_song_database()}
+    return data_set
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8443)
