@@ -105,7 +105,7 @@ def set_daily_song_database() -> int:
 
     sql: str = "INSERT INTO daily_song (song_id, song_date) VALUES (%s, %s)"
     db.db_cursor.execute(sql, (song_id, date.today()))
-    db.mydb.commit()
+    db.close_connection()
 
     return song_id
 
@@ -125,6 +125,7 @@ def get_daily_song_database() -> str:
     sql: str = "SELECT spotify_id FROM songs WHERE song_id = %s"
     db.db_cursor.execute(sql, (song_id,))
     spotify_id: str = db.db_cursor.fetchone()[0]
+    db.close_connection()
     return spotify_id
 
 
@@ -164,4 +165,4 @@ def update_songs_database(playlist: list) -> None:
 
 
 if __name__ == "__main__":
-    pass
+    print(get_daily_song_database())
