@@ -111,7 +111,7 @@ def get_playlist_elements() -> list:
     response: requests = requests.get(snapshot_url, headers=spotify_api_connection.headers)
     snapshot_response_json: dict = response.json()
 
-    with open(os.path.join(CONFING_FILES, "config_files/snapshots_ids.json"), "r") as file:
+    with open(os.path.join(CONFING_FILES, "snapshots_ids.json"), "r") as file:
         snapshots: list = json.load(file)
 
     if snapshot_response_json['snapshot_id'] == snapshots[-1]:  # no changes on playlist
@@ -147,7 +147,7 @@ def get_playlist_elements() -> list:
 
     # saving snapshot after successfully requesting data
     snapshots.append(snapshot_response_json['snapshot_id'])
-    with open(os.path.join(CONFING_FILES, "config_files/snapshots_ids.json"), "w") as file:
+    with open(os.path.join(CONFING_FILES, "snapshots_ids.json"), "w") as file:
         json.dump(snapshots, file)
 
     return received_songs
