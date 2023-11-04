@@ -36,7 +36,8 @@ def check_update():
 
     if removed_songs:
         print(f"Removed songs: {removed_songs}")
-        Twitter.changes_playlist_tweet(get_song_list_from_id(removed_songs),"remove_announcements.json")
+        Twitter.changes_playlist_tweet(get_song_list_from_id(removed_songs),
+                                       "remove_announcements.json")
         # make tweet
 
     Database.remove_songs_database(removed_songs)

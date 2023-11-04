@@ -105,7 +105,6 @@ def set_daily_song_database() -> int:
 
     sql: str = "INSERT INTO daily_song (song_id, song_date) VALUES (%s, %s)"
     db.db_cursor.execute(sql, (song_id, date.today()))
-    db.close_connection()
 
     return song_id
 

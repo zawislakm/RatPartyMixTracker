@@ -5,7 +5,7 @@ import requests
 import json
 import random
 import Spotify
-from definitions import BOT_PATH
+from definitions import BOT_PATH,ANNOUNCEMENTS_PATH
 
 load_dotenv()
 
@@ -20,7 +20,6 @@ Client = tweepy.Client(BEARER_TOKEN_TWITTER, API_KEY_TWITTER, API_KEY_SECRET_TWI
 auth = tweepy.OAuth1UserHandler(API_KEY_TWITTER, API_KEY_SECRET_TWITTER, ACCESS_TOKEN_TWITTER,
                                 ACCESS_TOKEN_SECRET_TWITTER)
 API = tweepy.API(auth)
-# BOT_PATH: str = os.getcwd()
 PHOTO_PATH: str = os.path.join(BOT_PATH, "temp.jpg")
 
 
@@ -56,8 +55,8 @@ def get_songs_string(songs: list) -> str:
     return all_songs_string
 
 
-def changes_playlist_tweet(songs: list, announcement_path: str) -> None:
-    with open(os.path.join(BOT_PATH, announcement_path), "r") as file:
+def changes_playlist_tweet(songs: list, announcement_file: str) -> None:
+    with open(os.path.join(ANNOUNCEMENTS_PATH, announcement_file), "r") as file:
         announcement_texts: list = json.load(file)
 
     songs.sort(key=lambda x: x.popularity, reverse=True)
@@ -69,13 +68,12 @@ def changes_playlist_tweet(songs: list, announcement_path: str) -> None:
 
 
 def daily_song_tweet(song: Spotify.Song) -> None:
-    with open(os.path.join(BOT_PATH, "daily_announcements.json"), "r") as file:
+    with open(os.path.join(ANNOUNCEMENTS_PATH, "daily_announcements.json"), "r") as file:
         daily_announcements = json.load(file)
 
     text: str = random.choice(daily_announcements)
     text: str = text.format(song.song_name, ", ".join(artist.artist_name for artist in song.artists_list),
                             song.song_link)
-
     make_tweet(text, song.photo_link)
 
 
@@ -91,7 +89,3 @@ def make_tweet(text: str, song_url: str) -> None:
 if __name__ == "__main__":
     pass
 
-    mentions = API.mentions_timeline()
-
-    # for me in mentions:
-    #     print(me)
