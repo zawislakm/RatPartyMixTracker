@@ -1,6 +1,6 @@
 ## Playlist tracking app
 An application that tracks real-time changes to a playlist on Spotify. 
-It provides updates about playlist changes and selects a daily song for Twitter followers every day."
+It provides updates about playlist changes and selects a daily song for Twitter followers every day.
 
 
 
