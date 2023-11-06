@@ -18,13 +18,14 @@ respective commands have been added to the OS in the /etc/systemd/system/ direct
 ![database schema](https://github.com/zawislakm/RatPartyMixTracker/blob/master/config_files/database_schema.png)  
 
 # Currently under development
-- RatPartyMixAPI (FastAPI) maily for [RatPartMix - DiscordBot](https://github.com/JakubDralus/discord-bot) and to facilitate database connectivity"
+- RatPartyMixAPI (FastAPI) maily for [RatPartMix - DiscordBot](https://github.com/JakubDralus/discord-bot) and to facilitate database connectivity
 
 
-# RatPartMix usefull links
+# RatPartMix links
 
-1. [RatPartMix - API](130.162.243.45:8443/ratpartymix)
+1. [RatPartMix - Spotify](https://open.spotify.com/playlist/0RHhiQ6hGLKgjE7eqNdXzh?si=42gbm0djRZ25L4x0Tq-d_Q&nd=1)
 2. [RatPartyMix - Twitter](https://twitter.com/RatPartyMix)
+2. [RatPartMix - API](https://130.162.243.45:8443/ratpartymix)
 3. [RatPartMix - DiscordBot](https://github.com/JakubDralus/discord-bot)
 
 
