@@ -25,7 +25,7 @@ respective commands have been added to the OS in the /etc/systemd/system/ direct
 
 1. [RatPartMix - Spotify](https://open.spotify.com/playlist/0RHhiQ6hGLKgjE7eqNdXzh?si=42gbm0djRZ25L4x0Tq-d_Q&nd=1)
 2. [RatPartyMix - Twitter](https://twitter.com/RatPartyMix)
-2. [RatPartMix - API](https://130.162.243.45:8443/ratpartymix)
+2. [RatPartMix - API](http://130.162.243.45:8443/ratpartymix)
 3. [RatPartMix - DiscordBot](https://github.com/JakubDralus/discord-bot)
 
 
