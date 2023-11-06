@@ -151,8 +151,18 @@ def get_playlist_elements() -> list:
         json.dump(snapshots, file)
 
     return received_songs
+def get_playlist_description() -> str:
+    spotify_api_connection: Spotify = Spotify()
+
+    url: str = f'https://api.spotify.com/v1/playlists/{RAT_PARTY_MIX_ID}'
+    response: requests = requests.get(url, headers=spotify_api_connection.headers)
+    response_json: dict = response.json()
+    print(response_json)
+    description: str = response_json.get("description")
+    return  description
 
 
 if __name__ == "__main__":
     pass
+
 
