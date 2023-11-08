@@ -1,10 +1,10 @@
-## Playlist tracking app
+# Playlist tracking app
 An application that tracks real-time changes to a playlist on Spotify. 
 It provides updates about playlist changes and selects a daily song for Twitter followers every day.
 
 
 
-# Technology core
+## Technology core
 - Python 3.10 with [modules](https://github.com/zawislakm/RatPartyMixTracker/blob/master/config_files/requirements.txt)
 - MySQL
 - Oracle Cloud - VM
@@ -17,11 +17,11 @@ respective commands have been added to the OS in the /etc/systemd/system/ direct
 
 ![database schema](https://github.com/zawislakm/RatPartyMixTracker/blob/master/config_files/database_schema.png)  
 
-# Currently under development
+## Currently under development
 - RatPartyMixAPI (FastAPI) maily for [RatPartMix - DiscordBot](https://github.com/JakubDralus/discord-bot) and to facilitate database connectivity
 
 
-# RatPartMix links
+## RatPartMix links
 
 1. [RatPartMix - Spotify](https://open.spotify.com/playlist/0RHhiQ6hGLKgjE7eqNdXzh?si=42gbm0djRZ25L4x0Tq-d_Q&nd=1)
 2. [RatPartyMix - Twitter](https://twitter.com/RatPartyMix)
