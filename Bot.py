@@ -1,6 +1,6 @@
+import Database
 import Spotify
 import Twitter
-import Database
 
 
 def get_song_list_from_id(song_set: set) -> list:
@@ -15,7 +15,7 @@ def set_difference(first: set, second: set) -> set:
     return first - second
 
 
-def check_update():
+def check_update() -> None:
     playlist_api_result: list = Spotify.get_playlist_elements()
 
     if not playlist_api_result:  # no updates on playlist :(

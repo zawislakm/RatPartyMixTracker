@@ -1,9 +1,9 @@
 import os
+import random
+from datetime import date
 
 import mysql.connector
-import random
 from dotenv import load_dotenv
-from datetime import date
 
 load_dotenv()
 DATABASE_HOST: str = os.getenv("DATABASE_HOST")
@@ -34,7 +34,7 @@ class DatabaseConnection:
             return cls.__instance
 
     @classmethod
-    def close_connection(cls):
+    def close_connection(cls) -> None:
         if cls.__instance is not None:
             cls.db_cursor.close()
             cls.mydb.commit()
@@ -44,8 +44,8 @@ class DatabaseConnection:
 
 
 # Variables
-SHUFFLE_RANGE = 10
-AVERAGE_LOWER = 3
+SHUFFLE_RANGE: int = 10
+AVERAGE_LOWER: int = 3
 
 
 def get_song_spotify_ids_database() -> set:
@@ -62,13 +62,13 @@ def get_song_ids_database() -> set:
     db: DatabaseConnection = DatabaseConnection()
     sql: str = "SELECT song_id FROM songs"
     db.db_cursor.execute(sql)
-    songs_ids = set(map(lambda x: x[0], db.db_cursor.fetchall()))
+    songs_ids: set = set(map(lambda x: x[0], db.db_cursor.fetchall()))
     return songs_ids
 
 
 def get_random_song_id_database() -> int:
     global SHUFFLE_RANGE
-    songs_ids = list(get_song_ids_database())
+    songs_ids: list = list(get_song_ids_database())
 
     for _ in range(SHUFFLE_RANGE):
         random.shuffle(songs_ids)
@@ -88,17 +88,17 @@ def set_daily_song_database() -> int:
                             GROUP BY songs.song_id
                         ) AS counts;"""
     db.db_cursor.execute(sql)
-    average_daily_appearance: int = db.db_cursor.fetchall()[0][0]
+    average_daily_appearance: int = db.db_cursor.fetchone()[0]
 
     while True:
-        song_id = get_random_song_id_database()
+        song_id: int = get_random_song_id_database()
         sql: str = """SELECT COALESCE(COUNT(ds.song_id), 0) AS appearance
                             FROM songs
                             LEFT JOIN daily_song ds ON songs.song_id = ds.song_id AND DATE(ds.song_date) <= CURDATE()
                             WHERE songs.song_id = %s
                             GROUP BY songs.song_id;"""
         db.db_cursor.execute(sql, (song_id,))
-        song_appearance: int = db.db_cursor.fetchall()[0][0]
+        song_appearance: int = db.db_cursor.fetchone()[0]
 
         if song_appearance < average_daily_appearance + AVERAGE_LOWER:
             break
@@ -147,7 +147,7 @@ def update_songs_database(playlist: list) -> None:
 
         sql: str = "SELECT song_id FROM songs WHERE spotify_id = %s "
         db.db_cursor.execute(sql, (song.spotify_id,))
-        database_song_id = db.db_cursor.fetchall()[0][0]
+        database_song_id: int = db.db_cursor.fetchall()[0][0]
 
         for artist in song.artists_list:
             sql: str = "INSERT INTO artists (spotify_id,artist_name) VALUES (%s,%s) ON DUPLICATE KEY UPDATE spotify_id = %s"
@@ -164,4 +164,4 @@ def update_songs_database(playlist: list) -> None:
 
 
 if __name__ == "__main__":
-    print(get_daily_song_database())
+    pass

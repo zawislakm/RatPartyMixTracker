@@ -1,13 +1,14 @@
-from fastapi import FastAPI
-from Database import get_daily_song_database
 import uvicorn
+from fastapi import FastAPI
+
+from Database import get_daily_song_database
 
 app = FastAPI()
 
 
 # 130.162.243.45:8443/ratpartymix/dailysong
 @app.get("/ratpartymix")
-async def get_home() -> str:
+async def get_homepage() -> str:
     return "Best playlist for parties, updating frequently to keep you up to date with best hits 😎"
 
 

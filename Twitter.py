@@ -1,11 +1,13 @@
-from dotenv import load_dotenv
-import os
-import tweepy
-import requests
 import json
+import os
 import random
+
+import requests
+import tweepy
+from dotenv import load_dotenv
+
 import Spotify
-from definitions import BOT_PATH,ANNOUNCEMENTS_PATH
+from definitions import BOT_PATH, ANNOUNCEMENTS_PATH
 
 load_dotenv()
 
@@ -24,7 +26,7 @@ PHOTO_PATH: str = os.path.join(BOT_PATH, "temp.jpg")
 
 
 def read_photo(get_url: str) -> bool:
-    photo_request = requests.get(get_url, stream=True)
+    photo_request: requests = requests.get(get_url, stream=True)
     if photo_request.status_code == 200:
         with open(PHOTO_PATH, "wb") as image:
             for chunk in photo_request:
@@ -88,4 +90,3 @@ def make_tweet(text: str, song_url: str) -> None:
 
 if __name__ == "__main__":
     pass
-
