@@ -3,12 +3,8 @@ import Spotify
 import Twitter
 
 
-def get_song_list_from_id(song_set: set) -> list:
-    songs = []
-    for song_id in song_set:
-        songs.append(Spotify.get_song_by_id(song_id))
-
-    return songs
+def get_song_list_from_id(songs: set) -> list:
+    return list(map(lambda x: Spotify.get_song_by_id(x), songs))
 
 
 def check_update() -> None:

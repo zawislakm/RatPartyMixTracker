@@ -84,7 +84,7 @@ def remove_songs(removed_songs: set) -> None:
             session.commit()
 
 
-def insert_element(obj: Song | Artist) -> int:
+def insert_element(obj) -> int: # Song | Artist
     with Session(ENGINE) as session:
         model_type = type(obj).__name__
         existing_obj = session.exec(

@@ -85,7 +85,7 @@ def get_playlist_elements() -> list:
 
     if snapshot_response_json['snapshot_id'] == snapshots[-1]:  # no changes on playlist
         print("No changes on playlist :(")
-        # return [] #TODO od komentowac
+        return []
 
     # reading new data
 
