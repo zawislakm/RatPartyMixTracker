@@ -26,7 +26,7 @@ PHOTO_PATH: str = os.path.join(BOT_PATH, "temp.jpg")
 
 
 def read_photo(get_url: str) -> bool:
-    photo_request: requests = requests.get(get_url, stream=True)
+    photo_request = requests.get(get_url, stream=True)
     if photo_request.status_code == 200:
         with open(PHOTO_PATH, "wb") as image:
             for chunk in photo_request:
@@ -47,36 +47,36 @@ def remove_photo() -> bool:
 
 
 def get_songs_string(songs: list) -> str:
-    all_songs_list: list = []
+    all_songs_list = []
 
     for song in songs:
-        artists_string: str = ", ".join(artist.artist_name for artist in song.artists_list)
+        artists_string = ", ".join(artist.artist_name for artist in song.get_artists())
         all_songs_list.append(f"{song.song_name} from {artists_string}")
 
-    all_songs_string: str = "\n".join(all_songs_list)
+    all_songs_string = "\n".join(all_songs_list)
     return all_songs_string
 
 
 def changes_playlist_tweet(songs: list, announcement_file: str) -> None:
     with open(os.path.join(ANNOUNCEMENTS_PATH, announcement_file), "r") as file:
-        announcement_texts: list = json.load(file)
+        announcement_texts = json.load(file)
 
     songs.sort(key=lambda x: x.popularity, reverse=True)
 
-    text: str = random.choice(announcement_texts)
-    text: str = text.format(get_songs_string(songs), songs[0].song_link)
+    text = random.choice(announcement_texts)
+    text = text.format(get_songs_string(songs), songs[0].song_link)
 
-    make_tweet(text, songs[0].photo_link)
+    make_tweet(text, songs[0].song_photo_link)
 
 
 def daily_song_tweet(song: Spotify.Song) -> None:
     with open(os.path.join(ANNOUNCEMENTS_PATH, "daily_announcements.json"), "r") as file:
         daily_announcements = json.load(file)
 
-    text: str = random.choice(daily_announcements)
-    text: str = text.format(song.song_name, ", ".join(artist.artist_name for artist in song.artists_list),
-                            song.song_link)
-    make_tweet(text, song.photo_link)
+    text = random.choice(daily_announcements)
+    text = text.format(song.song_name, ", ".join(artist.artist_name for artist in song.get_artists()),
+                       song.song_link)
+    make_tweet(text, song.song_photo_link)
 
 
 def make_tweet(text: str, song_url: str) -> None:

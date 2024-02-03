@@ -185,3 +185,7 @@ fabric.properties
 .idea
 
 .env
+temp.jpg
+TempFiles/testSqlModel.py
+TempFiles/testSqlAlchemy.py
+TempFiles

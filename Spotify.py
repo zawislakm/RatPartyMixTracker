@@ -1,13 +1,13 @@
 import base64
 import json
 import os
-from datetime import datetime
 
 import requests
 from dotenv import load_dotenv
 from requests import post
 
 from definitions import CONFING_FILES
+from models import Song, Artist
 
 load_dotenv()
 CLIENT_ID: str = os.getenv("CLIENT_ID")
@@ -16,7 +16,6 @@ RAT_PARTY_MIX_ID: str = os.getenv("RAT_PARTY_MIX_ID")
 
 
 # RAT_PARTY_MIX_ID: str = "7llfakgLAYwUxDhRk8lYIO"
-# BOT_PATH = os.getcwd()
 
 
 class Spotify:
@@ -37,19 +36,19 @@ class Spotify:
 
     @classmethod
     def get_token(cls) -> str:
-        auth_string: str = CLIENT_ID + ":" + CLIENT_SECRET
-        auth_bytes: bytes = auth_string.encode("utf-8")
-        auth_base64: str = str(base64.b64encode(auth_bytes), "utf-8")
+        auth_string = CLIENT_ID + ":" + CLIENT_SECRET
+        auth_bytes = auth_string.encode("utf-8")
+        auth_base64 = str(base64.b64encode(auth_bytes), "utf-8")
 
-        url: str = 'https://accounts.spotify.com/api/token'
-        headers: dict = {
+        url = 'https://accounts.spotify.com/api/token'
+        headers = {
             "Authorization": f'Basic {auth_base64}',
             "Content-Type": "application/x-www-form-urlencoded"
         }
-        data: dict = {'grant_type': 'client_credentials'}
-        result: requests = post(url, headers=headers, data=data)
-        json_result: dict = json.loads(result.content)
-        token: str = json_result['access_token']
+        data = {'grant_type': 'client_credentials'}
+        result = post(url, headers=headers, data=data)
+        json_result = json.loads(result.content)
+        token = json_result['access_token']
         return token
 
     @classmethod
@@ -59,89 +58,56 @@ class Spotify:
         return {}
 
 
-class Song:
-    # __new__ override?
-    def __init__(self, added_at=None, added_by: str = None,
-                 response: dict = None):
-        if response is not None:
-            self.song_name: str = response['name']
-            self.spotify_id: str = response['id']
-            self.song_link: str = response['external_urls']['spotify']
-            self.photo_link: str = response['album']['images'][0]['url']
-            self.popularity: str = response['popularity']
-            self.preview_url: str = response['preview_url']
-
-        if added_by is not None:
-            self.added_by: str = added_by['id']
-        if added_at is not None:
-            added_at: str = added_at.replace("T", " ").replace("Z", "")
-            self.added_at: datetime = datetime.strptime(added_at, "%Y-%m-%d %H:%M:%S")
-
-        self.artists_list: list = []
-
-
-class Artist:
-    def __init__(self, spotify_id: str = None, artist_name: str = None, response: dict = None):
-        if response is not None:
-            self.spotify_id: str = response['id']
-            self.artist_name: str = response['name']
-            return
-        self.spotify_id: str = spotify_id
-        self.artist_name: str = artist_name
+SPOTIFY_CONNECTION = Spotify()
 
 
 def get_song_by_id(song_id: str) -> Song:
-    spotify_connection: Spotify = Spotify()
-    url: str = f'https://api.spotify.com/v1/tracks/{song_id}'
-    response: requests = requests.get(url, headers=spotify_connection.headers)
-    response_json: dict = response.json()
+    url = f'https://api.spotify.com/v1/tracks/{song_id}'
+    response = requests.get(url, headers=SPOTIFY_CONNECTION.headers)
+    response_json = response.json()
 
-    song_object: Song = Song(response=response_json)
-    song_object.artists_list = []
+    song = Song(data=response_json)
 
     for artist in response_json['artists']:
-        artist_object: Artist = Artist(response=artist)
-        song_object.artists_list.append(artist_object)
+        artist = Artist(data=artist)
+        song.add_artist(artist)
 
-    return song_object
+    return song
 
 
 def get_playlist_elements() -> list:
-    spotify_api_connection: Spotify = Spotify()
-
-    snapshot_url: str = f'https://api.spotify.com/v1/playlists/{RAT_PARTY_MIX_ID}?fields=snapshot_id'
-    response: requests = requests.get(snapshot_url, headers=spotify_api_connection.headers)
-    snapshot_response_json: dict = response.json()
+    snapshot_url = f'https://api.spotify.com/v1/playlists/{RAT_PARTY_MIX_ID}?fields=snapshot_id'
+    response = requests.get(snapshot_url, headers=SPOTIFY_CONNECTION.headers)
+    snapshot_response_json = response.json()
 
     with open(os.path.join(CONFING_FILES, "snapshots_ids.json"), "r") as file:
-        snapshots: list = json.load(file)
+        snapshots = json.load(file)
 
     if snapshot_response_json['snapshot_id'] == snapshots[-1]:  # no changes on playlist
         print("No changes on playlist :(")
-        return []
+        # return [] #TODO od komentowac
 
     # reading new data
 
-    url: str = f'https://api.spotify.com/v1/playlists/{RAT_PARTY_MIX_ID}/tracks?limit=50'
+    url = f'https://api.spotify.com/v1/playlists/{RAT_PARTY_MIX_ID}/tracks?limit=50'
 
-    received_songs: list = []
+    received_songs = []
 
     while url:
-        response: requests = requests.get(url, headers=spotify_api_connection.headers)
-        response_json: dict = response.json()
+        response = requests.get(url, headers=SPOTIFY_CONNECTION.headers)
+        response_json = response.json()
         if response.status_code == 200:
 
             for track in response_json['items']:
-                song_object: Song = Song(added_at=track['added_at'], added_by=track['added_by'],
-                                         response=track['track'])
+                song = Song(added_at=track['added_at'], added_by=track['added_by'], data=track['track'])
 
                 for artist in track['track']['artists']:
-                    artist_object: Artist = Artist(response=artist)
-                    song_object.artists_list.append(artist_object)
+                    artist = Artist(data=artist)
+                    song.add_artist(artist)
 
-                received_songs.append(song_object)
+                received_songs.append(song)
 
-            url: str = response_json['next']
+            url = response_json['next']
 
         else:
             # End of requests
@@ -156,12 +122,10 @@ def get_playlist_elements() -> list:
 
 
 def get_playlist_description() -> str:
-    spotify_api_connection: Spotify = Spotify()
-
-    url: str = f'https://api.spotify.com/v1/playlists/{RAT_PARTY_MIX_ID}'
-    response: requests = requests.get(url, headers=spotify_api_connection.headers)
-    response_json: dict = response.json()
-    description: str = response_json.get("description")
+    url = f'https://api.spotify.com/v1/playlists/{RAT_PARTY_MIX_ID}'
+    response = requests.get(url, headers=SPOTIFY_CONNECTION.headers)
+    response_json = response.json()
+    description = response_json["description"]
     return description
 
 

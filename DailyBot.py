@@ -1,16 +1,13 @@
-import Database
+import Database as db
 import Spotify
 import Twitter
 
 
 def random_song() -> None:
-    db: Database.DatabaseConnection = Database.DatabaseConnection()
-    spotify_id: str = Database.get_daily_song_database()
+    daily_song = db.get_daily_song()
 
-    song_object: Spotify.Song = Spotify.get_song_by_id(spotify_id)
+    song_object = Spotify.get_song_by_id(daily_song.spotify_id)
     Twitter.daily_song_tweet(song_object)
-
-    db.close_connection()
 
 
 if __name__ == "__main__":
