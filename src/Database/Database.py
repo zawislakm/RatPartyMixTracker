@@ -1,18 +1,11 @@
-import os
 import random
 from collections import Counter
 from datetime import date
 
-from dotenv import load_dotenv
 from sqlmodel import Session, SQLModel, create_engine, select
 
-from models import Song, DailySong, Artist, SongsByArtists
-
-load_dotenv()
-DATABASE_HOST: str = os.getenv("DATABASE_HOST")
-DATABASE_USER: str = os.getenv("DATABASE_USER")
-DATABASE_PASSWORD: str = os.getenv("DATABASE_PASSWORD")
-DATABASE_NAME: str = os.getenv("DATABASE_NAME")
+from src.Database.__init__ import DATABASE_HOST, DATABASE_USER, DATABASE_PASSWORD, DATABASE_NAME
+from src.Database.models import Song, DailySong, Artist, SongsByArtists
 
 DATABASE_URL = f'mysql+mysqlconnector://{DATABASE_USER}:{DATABASE_PASSWORD}@{DATABASE_HOST}/{DATABASE_NAME}'
 
@@ -21,8 +14,8 @@ ENGINE = create_engine(DATABASE_URL)
 SQLModel.metadata.create_all(ENGINE)
 
 # Variables
-SHUFFLE_RANGE = int(os.getenv("SHUFFLE_RANGE"))
-AVERAGE_LOWER = int(os.getenv("AVERAGE_LOWER"))
+SHUFFLE_RANGE: int = 10
+AVERAGE_LOWER: int = 3
 
 
 def select_songs() -> list:

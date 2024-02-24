@@ -1,6 +1,5 @@
-import Database as db
-import Spotify
-import Twitter
+from src.Database import Database as db
+from src.ExternalAPIs import Spotify, Twitter
 
 
 def get_song_list_from_id(songs: set) -> list:

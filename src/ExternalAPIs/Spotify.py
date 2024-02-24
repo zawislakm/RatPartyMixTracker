@@ -3,19 +3,11 @@ import json
 import os
 
 import requests
-from dotenv import load_dotenv
 from requests import post
 
-from definitions import CONFING_FILES
-from models import Song, Artist
-
-load_dotenv()
-CLIENT_ID: str = os.getenv("CLIENT_ID")
-CLIENT_SECRET: str = os.getenv("CLIENT_SECRET")
-RAT_PARTY_MIX_ID: str = os.getenv("RAT_PARTY_MIX_ID")
-
-
-# RAT_PARTY_MIX_ID: str = "7llfakgLAYwUxDhRk8lYIO"
+from src.Database.models import Song, Artist
+from src.Definitions.definitions import CONFING_FILES
+from src.ExternalAPIs.__init__ import CLIENT_ID, CLIENT_SECRET, RAT_PARTY_MIX_ID
 
 
 class Spotify:

@@ -3,9 +3,9 @@ from datetime import datetime
 from fastapi import Depends, APIRouter, Request, HTTPException
 from pydantic import BaseModel
 
-import Database as db
+from src.Database import Database as db
 import auth
-from models import Song
+from src.Database.models import Song
 
 dailysong_router = APIRouter(prefix="/dailysong", tags=["dailysong"])
 
