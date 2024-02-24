@@ -21,8 +21,8 @@ ENGINE = create_engine(DATABASE_URL)
 SQLModel.metadata.create_all(ENGINE)
 
 # Variables
-SHUFFLE_RANGE: int = 10
-AVERAGE_LOWER: int = 3
+SHUFFLE_RANGE = int(os.getenv("SHUFFLE_RANGE"))
+AVERAGE_LOWER = int(os.getenv("AVERAGE_LOWER"))
 
 
 def select_songs() -> list:
@@ -38,7 +38,22 @@ def select_song_by_song_id(song_id: int) -> Song:
     with Session(ENGINE) as session:
         statement = select(Song).where(Song.song_id == song_id)
         result = session.exec(statement)
-        song = result.one()
+        song = result.first()
+
+        if song is None:
+            raise ValueError("Song with given song_id does not exist in database")
+
+        return song
+
+
+def select_song_by_spotify_id(spotify_id: str) -> Song:
+    with Session(ENGINE) as session:
+        statement = select(Song).where(Song.spotify_id == spotify_id)
+        result = session.exec(statement)
+        song = result.first()
+
+        if song is None:
+            raise ValueError("Song with given spotify_id does not exist in database")
 
         return song
 
@@ -84,7 +99,7 @@ def remove_songs(removed_songs: set) -> None:
             session.commit()
 
 
-def insert_element(obj) -> int: # Song | Artist
+def insert_element(obj) -> int:  # Song | Artist
     with Session(ENGINE) as session:
         model_type = type(obj).__name__
         existing_obj = session.exec(
@@ -121,23 +136,49 @@ def add_songs(playlist: list) -> None:
 
 
 def get_daily_song() -> Song:
+    if is_daily_song_set_already():
+        # get daily song
+        daily_song = select_daily_song_by_date(date.today())
+    else:
+        # set daily song
+        daily_song = pick_daily_song()
+
+    return daily_song
+
+
+def is_daily_song_set_already(song_date: date = date.today()) -> bool:
     with Session(ENGINE) as session:
-        daily_song = None
-
-        statement = select(DailySong).where(DailySong.song_date == date.today())
+        statement = select(DailySong).where(DailySong.song_date == song_date)
         result = session.exec(statement).first()
+        return result is not None
 
-        if result is not None:
-            # get daily song
-            daily_song = select_song_by_song_id(result.song_id)
-        else:
-            # set daily song
-            daily_song = set_daily_song()
 
+def select_daily_song_by_date(song_date: date = date.today()) -> Song:
+    with Session(ENGINE) as session:
+        statement = select(DailySong).where(DailySong.song_date == song_date)
+        result = session.exec(statement).first()
+        daily_song = select_song_by_song_id(result.song_id)
         return daily_song
 
 
-def set_daily_song() -> Song:
+def set_daily_song(song_id: int = None, spotify_id: str = None, song_date: date = date.today()):
+    if song_date < date.today():
+        raise ValueError("You cannot set song for past days")
+
+    if is_daily_song_set_already(song_date):
+        raise ValueError("Daily song for given date is already set")
+
+    if spotify_id is not None:
+        song = select_song_by_spotify_id(spotify_id)
+        song_id = song.song_id
+
+    with Session(ENGINE) as session:
+        daily_song = DailySong(song_date=song_date, song_id=song_id)
+        session.add(daily_song)
+        session.commit()
+
+
+def pick_daily_song() -> Song:
     global AVERAGE_LOWER, SHUFFLE_RANGE
 
     with Session(ENGINE) as session:
@@ -158,14 +199,10 @@ def set_daily_song() -> Song:
             if daily_songs_counter.get(song_id, 0) < avg_daily_appearance + AVERAGE_LOWER:
                 break
 
-        daily_song = DailySong(song_date=date.today(), song_id=song_id)
-
-        session.add(daily_song)
-        session.commit()
+        set_daily_song(song_id=song_id, song_date=date.today())
 
         return select_song_by_song_id(song_id)
 
 
 if __name__ == "__main__":
     pass
-    get_daily_song()

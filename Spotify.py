@@ -26,13 +26,9 @@ class Spotify:
     def __new__(cls, *args, **kwargs):
         if cls.__instance is None:
             cls.__instance = super().__new__(cls)
+            cls.headers = {"Authorization": "Bearer " + cls.get_token()}
 
-            cls.token = cls.get_token()
-            cls.headers = cls.get_auth_header()
-
-            return cls.__instance
-        else:
-            return cls.__instance
+        return cls.__instance
 
     @classmethod
     def get_token(cls) -> str:
@@ -50,12 +46,6 @@ class Spotify:
         json_result = json.loads(result.content)
         token = json_result['access_token']
         return token
-
-    @classmethod
-    def get_auth_header(cls) -> dict:
-        if cls.token is not None:
-            return {"Authorization": "Bearer " + cls.token}
-        return {}
 
 
 SPOTIFY_CONNECTION = Spotify()
