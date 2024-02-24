@@ -155,8 +155,8 @@ def select_daily_song_by_date(song_date: date = date.today()) -> Song:
 
 
 def set_daily_song(song_id: int = None, spotify_id: str = None, song_date: date = date.today()):
-    if song_date < date.today():
-        raise ValueError("You cannot set song for past days")
+    # if song_date < date.today():
+    #     raise ValueError("You cannot set song for past days")
 
     if is_daily_song_set_already(song_date):
         raise ValueError("Daily song for given date is already set")

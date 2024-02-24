@@ -109,3 +109,7 @@ async def get_access_token(request: Request, verify: bool = Security(get_api_key
 async def refresh_access_token(request: Request, verify: bool = Depends(verify_refresh_token)) -> dict:
     token = Token(api_key=request.headers.get("refresh_token"))
     return dict(token)
+
+
+if __name__ == "__main__":
+    pass
