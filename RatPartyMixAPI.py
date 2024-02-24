@@ -1,8 +1,8 @@
 import uvicorn
 from fastapi import FastAPI, APIRouter, Depends
 
-import auth
-import dailysong
+import src.API.auth as auth
+import src.API.dailysong as dailysong
 
 app = FastAPI()
 

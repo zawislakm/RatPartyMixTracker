@@ -3,7 +3,7 @@ from datetime import datetime, date
 from fastapi import Depends, APIRouter, Request, HTTPException
 from pydantic import BaseModel
 
-import auth
+import src.API.auth as auth
 from src.Database import Database as db
 from src.Database.models import Song
 

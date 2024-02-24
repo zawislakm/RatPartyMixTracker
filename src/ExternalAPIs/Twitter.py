@@ -59,7 +59,7 @@ def changes_playlist_tweet(songs: list, announcement_file: str) -> None:
     text = random.choice(announcement_texts)
     text = text.format(get_songs_string(songs), songs[0].song_link)
 
-    # make_tweet(text, songs[0].song_photo_link)
+    make_tweet(text, songs[0].song_photo_link)
 
 
 def daily_song_tweet(song: Song) -> None:
@@ -69,7 +69,7 @@ def daily_song_tweet(song: Song) -> None:
     text = random.choice(daily_announcements)
     text = text.format(song.song_name, ", ".join(artist.artist_name for artist in song.get_artists()),
                        song.song_link)
-    # make_tweet(text, song.song_photo_link)
+    make_tweet(text, song.song_photo_link)
 
 
 def make_tweet(text: str, song_url: str) -> None:
