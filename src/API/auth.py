@@ -31,12 +31,12 @@ class Token:
     def __str__(self) -> str:
         return self.token_type + " " + self.access_token
 
-    def __iter__(self):
+    def __iter__(self) -> iter:
         yield "access_token", self.access_token
         yield "token_type", self.token_type
         yield "refresh_token", self.refresh_token
 
-    def __dict__(self):
+    def __dict__(self) -> dict:
         return {
             "access_token": self.access_token,
             "token_type": self.token_type,
@@ -44,7 +44,7 @@ class Token:
         }
 
 
-def get_api_key(request: Request):
+def get_api_key(request: Request) -> bool:
     try:
         api_key_request = request.headers.get("X-API-Key")  # chodzi o to w 4
 
@@ -60,7 +60,7 @@ def get_api_key(request: Request):
         raise exc
 
 
-def check_token(request: Request):
+def check_token(request: Request) -> bool:
     try:
         authorization_header = request.headers.get("Authorization")
         if not authorization_header:
@@ -68,6 +68,7 @@ def check_token(request: Request):
 
         _, token = authorization_header.split(" ")
         payload = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
+
         if "id" not in payload:
             raise HTTPException(status_code=400, detail="Invalid token: Missing 'id' in payload")
 
@@ -81,7 +82,7 @@ def check_token(request: Request):
         raise HTTPException(status_code=400, detail="Invalid token: Invalid token")
 
 
-def verify_refresh_token(request: Request):
+def verify_refresh_token(request: Request) -> bool:
     try:
         refresh_token = request.headers.get("refresh_token")
         if not refresh_token:
@@ -99,13 +100,13 @@ def verify_refresh_token(request: Request):
         raise HTTPException(status_code=400, detail="Invalid token: Invalid refresh token")
 
 
-@auth_router.post("/token")
+@auth_router.get("/token", status_code=200)
 async def get_access_token(request: Request, verify: bool = Security(get_api_key)) -> dict:
     token = Token(api_key=request.headers.get("X-API-Key"))
     return dict(token)
 
 
-@auth_router.post("/refresh")
+@auth_router.get("/refresh", status_code=200)
 async def refresh_access_token(request: Request, verify: bool = Depends(verify_refresh_token)) -> dict:
     token = Token(api_key=request.headers.get("refresh_token"))
     return dict(token)
