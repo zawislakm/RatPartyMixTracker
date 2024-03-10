@@ -23,7 +23,7 @@ jobs:
 
           # TWITTER API
           envkey_API_KEY_TWITTER: ${{ secrets.API_KEY_TWITTER }}
-          envkey_API_KEY_SECRET_TWITTER: ${{ secrets.API_SECRET_KEY_TWITTER }}
+          envkey_API_KEY_SECRET_TWITTER: ${{ secrets.API_KEY_SECRET_TWITTER }}
           envkey_BEARER_TOKEN_TWITTER: ${{ secrets.BEARER_TOKEN_TWITTER }}
           envkey_ACCESS_TOKEN_TWITTER: ${{ secrets.ACCESS_TOKEN_TWITTER }}
           envkey_ACCESS_TOKEN_SECRET_TWITTER: ${{ secrets.ACCESS_TOKEN_SECRET_TWITTER }}
