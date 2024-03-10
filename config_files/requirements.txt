@@ -7,7 +7,7 @@ python-dotenv==1.0.1
 Requests==2.31.0
 SQLAlchemy==2.0.25
 sqlmodel==0.0.16
-starlette==0.27.0
+starlette==0.36.2
 tweepy==4.14.0
 uvicorn==0.27.1
 mysql==0.0.3
