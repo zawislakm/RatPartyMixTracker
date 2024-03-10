@@ -1,0 +1,28 @@
+name: Autodeploy
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4.1.1
+      - name: Creating .env file
+        uses: actually-colab/github-action-create-env-file@v2.3
+        with:
+          envkey_DEBUG: false
+          envkey_CLIENT_ID: ${{ secrets.CLIENT_ID }}
+          envkey_CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
+          envkey_RAT_PARTY_MIX_ID: ${{ vars.RAT_PARTY_MIX_ID }}
+
+          envkey_SHUFFLE_RANGE: ${{ vars.SHUFFLE_RANGE }}
+
+          file_name: .env
+      - name: Check env file
+        run: cat .env
+
