@@ -46,7 +46,7 @@ def select_song_by_spotify_id(spotify_id: str) -> Song:
         song = result.first()
 
         if song is None:
-            raise ValueError("Song with given spotify_id does not exist in database")
+            raise LookupError("Song with given spotify_id does not exist in database")
 
         return song
 

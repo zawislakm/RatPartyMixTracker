@@ -1,0 +1,9 @@
+.dockerignore
+.github
+.gitignore
+.idea
+README.md
+docker-compose.yml
+Dockerfile
+venv
+TempFiles
