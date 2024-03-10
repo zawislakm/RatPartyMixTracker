@@ -51,8 +51,6 @@ jobs:
 
 
           file_name: .env
-      - name: Check env file
-        run: cat .env
       - name: Building and pushing the image
         id: build-image
         run: |
