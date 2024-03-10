@@ -16,11 +16,39 @@ jobs:
         uses: actually-colab/github-action-create-env-file@v2.3
         with:
           envkey_DEBUG: false
+          # SPOTIFY API
           envkey_CLIENT_ID: ${{ secrets.CLIENT_ID }}
           envkey_CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
           envkey_RAT_PARTY_MIX_ID: ${{ vars.RAT_PARTY_MIX_ID }}
 
+          # TWITTER API
+          envkey_API_KEY_TWITTER: ${{ secrets.API_KEY_TWITTER }}
+          envkey_API_SECRET_KEY_TWITTER: ${{ secrets.API_SECRET_KEY_TWITTER }}
+          envkey_BEARER_TOKEN_TWITTER: ${{ secrets.BEARER_TOKEN_TWITTER }}
+          envkey_ACCESS_TOKEN_TWITTER: ${{ secrets.ACCESS_TOKEN_TWITTER }}
+          envkey_ACCESS_TOKEN_SECRET_TWITTER: ${{ secrets.ACCESS_TOKEN_SECRET_TWITTER }}
+
+          # DATABASE
+          envkey_DATABASE_HOST: ${{ secrets.DATABASE_HOST }}
+          envkey_DATABASE_USER: ${{ secrets.DATABASE_USER }}
+          envkey_DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
+          envkey_DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
+
+
+
+
+          # DAILY SONG CHOOSE VARIABLES
           envkey_SHUFFLE_RANGE: ${{ vars.SHUFFLE_RANGE }}
+          envkey_AVERAGE_LOWER: ${{ vars.AVERAGE_LOWER }}
+
+          # RAT PARTY MIX API
+          envkey_RAT_PARTY_MIX_API_KEYS: ${{ secrets.RAT_PARTY_MIX_API_KEYS }}
+          envkey_RAT_PARTY_MIX_SECRET_KEY: ${{ secrets.RAT_PARTY_MIX_SECRET_KEY }}
+
+          # RAT PARTY MIX API VARIABLES
+          envkey_ACCESS_TOKEN_EXPIRE_MINUTES: ${{ vars.ACCESS_TOKEN_EXPIRE_MINUTES }}
+          envkey_REFRESH_TOKEN_EXPIRE_DAYS: ${{ vars.REFRESH_TOKEN_EXPIRE_DAYS }}
+
 
           file_name: .env
       - name: Check env file
