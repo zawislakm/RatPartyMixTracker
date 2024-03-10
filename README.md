@@ -1,7 +1,7 @@
 # Playlist tracking app
 
-A code that tracks real-time changes to a playlist on Spotify.
-It provides updates about playlist changes and selects a daily song for Twitter followers every day.
+An application monitors real-time updates to Spotify playlists,
+delivering notifications about changes and select daily song for Twitter followers.
 
 ## Technology core
 
@@ -9,12 +9,19 @@ It provides updates about playlist changes and selects a daily song for Twitter 
 - MySQL
 - Oracle Cloud - VM
 - Linux
+- Docker with GitHub Actions
 
-The application is hosted on Oracle Cloud using a Virtual Machine (Ubuntu 20.04).
-A MySQL database is used for storing playlist information. API provides information about daily song to 
-[DiscordBot]((https://github.com/JakubDralus/discord-bot)) and allows to set a new daily songs for upcoming days.
-To ensure the continuous operation of the API, monitoring playlist changes, and daily song post to Twitter,
-respective commands have been added to the OS in the /etc/systemd/system/ directory.
+
+The application is hosted on Oracle Cloud using a Virtual Machine (Ubuntu 20.04). MySQL database is used for 
+storing playlist information. The app regularly checks for updates on the playlist and selects a 
+daily song to share with Twitter followers. API provides information about daily song to 
+[DiscordBot]((https://github.com/JakubDralus/discord-bot)) and allows to set a daily songs for future days. 
+
+To ensure continuous operation, Cron jobs are employed within a Docker Image. Additionally,
+GitHub Actions are utilized for building and deploying to DockerHub. The server is configured with a
+[webhook](https://github.com/adnanh/webhook) from DockerHub to automatically pull the latest 
+image from DockerHub and restart the container accordingly.
+
 
 ![database schema](https://github.com/zawislakm/RatPartyMixTracker/blob/master/config_files/database_schema.png)
 
