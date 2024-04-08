@@ -69,11 +69,11 @@ def daily_song_tweet(song: Song) -> None:
     text = random.choice(daily_announcements)
     text = text.format(song.song_name, ", ".join(artist.artist_name for artist in song.get_artists()),
                        song.song_link)
-    make_tweet(text, song.song_photo_link)
+    make_tweet(text, None)
 
 
-def make_tweet(text: str, song_url: str) -> None:
-    if read_photo(song_url):
+def make_tweet(text: str, song_url: str = None) -> None:
+    if song_url is not None and read_photo(song_url):
         media = API.media_upload(PHOTO_PATH)
         Client.create_tweet(text=text, media_ids=[media.media_id])
         remove_photo()
