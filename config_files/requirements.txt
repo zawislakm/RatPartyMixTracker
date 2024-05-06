@@ -13,3 +13,4 @@ uvicorn==0.27.1
 mysql==0.0.3
 mysql-connector-python==8.2.0
 mysqlclient==2.2.0
+pytest==8.2.0

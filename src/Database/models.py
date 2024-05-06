@@ -37,17 +37,19 @@ class Song(SQLModel, table=True):
     _song_link: Optional[str] = PrivateAttr(default=None)
     _song_photo_link: Optional[str] = PrivateAttr(default=None)
     _popularity: Optional[int] = PrivateAttr(default=None)
-    _preview_url: Optional[str] = PrivateAttr(default=None)
+    _preview_url: Optional[str]  = PrivateAttr(default=None)
     _artists: Optional[list] = PrivateAttr(default_factory=list)
 
     def __init__(self, data: dict, added_by: str = None, added_at: str = None) -> None:
         super().__init__()
         self.song_name: str = data['name']
         self.spotify_id: str = data['id']
-        self._song_link: str = data['external_urls']['spotify']
-        self._song_photo_link: str = data['album']['images'][0]['url']
-        self._popularity: int = data['popularity']
-        self._preview_url: str = data['preview_url']
+        if data.get('external_urls') is not None:
+            self._song_link: str = data['external_urls']['spotify']
+        if data.get('album') is not None:
+            self._song_photo_link: str = data['album']['images'][0]['url']
+        self._popularity: int = data.get('popularity', 0)
+        self._preview_url: str = data.get('preview_url', "")
 
         if added_by is not None:
             self.added_by: str = added_by['id']
