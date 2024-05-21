@@ -4,7 +4,7 @@ mysql_connector_repackaged==0.3.1
 pydantic==2.6.3
 PyJWT==2.8.0
 python-dotenv==1.0.1
-Requests==2.31.0
+Requests==2.32.0
 SQLAlchemy==2.0.25
 sqlmodel==0.0.16
 starlette==0.36.3
