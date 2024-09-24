@@ -3,12 +3,11 @@
 An application monitors real-time updates to Spotify playlists,
 delivering notifications about changes and select daily song for Twitter followers.
 
-## Technology core
+## Technology
 
 - Python 3.10 with [SQLModel, FastAPI, Tweepy and others](https://github.com/zawislakm/RatPartyMixTracker/blob/master/config_files/requirements.txt)
 - MySQL
 - Oracle Cloud - VM
-- Linux
 - Docker with GitHub Actions
 
 
@@ -23,8 +22,38 @@ GitHub Actions are utilized for building and deploying to DockerHub. The server 
 image from DockerHub and restart the container accordingly.
 
 
-![database schema](https://github.com/zawislakm/RatPartyMixTracker/blob/master/config_files/database_schema.png)
+```mermaid
+erDiagram
+    ARTISTS {
+        int  artist_id PK
+        varchar spotify_id
+        varchar artist_name
+    }
 
+    SONGS {
+        int  song_id PK
+        varchar spotify_id
+        varchar song_name
+        varchar added_by
+        datetime added_at  
+    }
+
+    SONGS_BY_ARTISTS {
+        int artist_id FK
+        int song_id FK
+    }
+
+    DAILY_SONG {
+        int  song_id FK
+        date song_date
+    }
+
+ARTISTS ||--o{ SONGS_BY_ARTISTS : "artist_id"
+SONGS ||--o{ SONGS_BY_ARTISTS : "song_id"
+SONGS ||--o{ DAILY_SONG : "song_id"
+
+
+```
 
 ## RatPartMix links
 

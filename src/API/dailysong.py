@@ -15,7 +15,7 @@ class DailySongSetRequest(BaseModel):
     date: str
 
 
-@dailysong_router.post("/set", status_code=201)
+@dailysong_router.post("", status_code=201)
 async def set_daily_song(daily_song_request: DailySongSetRequest, verify: bool = Depends(auth.check_token)) -> dict:
     song_date = datetime.fromisoformat(daily_song_request.date).date()
 
@@ -34,7 +34,7 @@ async def set_daily_song(daily_song_request: DailySongSetRequest, verify: bool =
     return {"message": "Song successfully set for the specified date", "success": True}
 
 
-@dailysong_router.get("/get", status_code=200)
+@dailysong_router.get("", status_code=200)
 async def get_daily_song(verify: bool = Depends(auth.check_token)) -> Song:
     return db.get_daily_song()
 
