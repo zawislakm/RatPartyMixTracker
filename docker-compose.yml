@@ -1,0 +1,65 @@
+services:
+  db:
+    image: postgres:17.2
+    container_name: postgres
+    environment:
+      POSTGRES_DB: ${DATABASE_NAME}
+      POSTGRES_USER: ${DATABASE_USER}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - server-db
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: server
+    # TODO make better way to pass env variables
+    environment:
+      CLIENT_ID: ${CLIENT_ID}
+      CLIENT_SECRET: ${CLIENT_SECRET}
+      RAT_PARTY_MIX_ID: ${RAT_PARTY_MIX_ID}
+      API_KEY_TWITTER: ${API_KEY_TWITTER}
+      API_KEY_SECRET_TWITTER: ${API_KEY_SECRET_TWITTER}
+      BEARER_TOKEN_TWITTER: ${BEARER_TOKEN_TWITTER}
+      ACCESS_TOKEN_TWITTER: ${ACCESS_TOKEN_TWITTER}
+      ACCESS_TOKEN_SECRET_TWITTER: ${ACCESS_TOKEN_SECRET_TWITTER}
+      DATABASE_HOST: db
+      DATABASE_USER: ${DATABASE_USER}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+      DATABASE_NAME: ${DATABASE_NAME}
+      RAT_PARTY_MIX_API_KEYS: ${RAT_PARTY_MIX_API_KEYS}
+      RAT_PARTY_MIX_SECRET_KEY: ${RAT_PARTY_MIX_SECRET_KEY}
+      ACCESS_TOKEN_EXPIRE_MINUTES: ${ACCESS_TOKEN_EXPIRE_MINUTES}
+      REFRESH_TOKEN_EXPIRE_DAYS: ${REFRESH_TOKEN_EXPIRE_DAYS}
+    depends_on:
+      - db
+    networks:
+      - server-db
+      - nginx-server
+  nginx:
+    image: nginx:1.27.3
+    container_name: nginx
+    depends_on:
+      - db
+      - server
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+    networks:
+      - nginx-server
+
+
+
+volumes:
+  postgres-data:
+
+networks:
+  server-db:
+    driver: bridge
+  nginx-server:
+    driver: bridge

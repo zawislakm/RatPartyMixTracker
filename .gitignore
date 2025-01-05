@@ -189,3 +189,5 @@ temp.jpg
 TempFiles/testSqlModel.py
 TempFiles/testSqlAlchemy.py
 TempFiles
+mysql
+postgres

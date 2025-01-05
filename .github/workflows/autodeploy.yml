@@ -1,5 +1,5 @@
 name: Autodeploy
-
+# TODO autodeploy currently not working with new docker-compose file
 on:
   push:
     branches:

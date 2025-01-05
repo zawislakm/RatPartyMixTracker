@@ -2,12 +2,13 @@ import random
 from collections import Counter
 from datetime import date
 
-from sqlmodel import Session, SQLModel, create_engine, select
+from sqlmodel import Session, SQLModel, select
+from sqlmodel import create_engine
 
 from src.Database.__init__ import DATABASE_HOST, DATABASE_USER, DATABASE_PASSWORD, DATABASE_NAME
 from src.Database.models import Song, DailySong, Artist, SongsByArtists
 
-DATABASE_URL = f'mysql+mysqlconnector://{DATABASE_USER}:{DATABASE_PASSWORD}@{DATABASE_HOST}/{DATABASE_NAME}'
+DATABASE_URL = f'postgresql+psycopg2://{DATABASE_USER}:{DATABASE_PASSWORD}@{DATABASE_HOST}:5432/{DATABASE_NAME}'
 
 ENGINE = create_engine(DATABASE_URL)
 
@@ -23,13 +24,13 @@ def select_songs() -> list:
         statement = select(Song)
         results = session.exec(statement)
         songs = list(results.all())
-
         return songs
 
 
 def select_song_by_song_id(song_id: int) -> Song:
     with Session(ENGINE) as session:
         statement = select(Song).where(Song.song_id == song_id)
+        # select * from songs where song_id = song_id SQL
         result = session.exec(statement)
         song = result.first()
 

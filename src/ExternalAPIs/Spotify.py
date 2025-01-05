@@ -65,6 +65,7 @@ def get_playlist_elements() -> list:
     with open(os.path.join(CONFING_FILES, "snapshots_ids.json"), "r") as file:
         snapshots = json.load(file)
 
+    # TODO move storing snapshots to database
     if snapshot_response_json['snapshot_id'] == snapshots[-1]:  # no changes on playlist
         print("No changes on playlist :(")
         return []
