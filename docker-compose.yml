@@ -53,8 +53,6 @@ services:
     networks:
       - nginx-server
 
-
-
 volumes:
   postgres-data:
 
