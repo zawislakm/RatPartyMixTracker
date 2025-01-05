@@ -1,7 +1,0 @@
-# must be ended with a new line "LF" (Unix) and not "CRLF" (Windows)
-* * * * * echo "Hello world" >> /var/log/cron.log 2>&1
-@reboot /usr/local/bin/python3 /app/RatPartyMixAPI.py >> /var/log/cron.log 2>&1
-*/5 * * * * /usr/local/bin/python3 /app/Bot.py
-0 9 * * * /usr/local/bin/python3 /app/DailyBot.py
-
-# An empty line is required at the end of this file for a valid cron file.

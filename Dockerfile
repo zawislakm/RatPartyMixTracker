@@ -1,37 +1,15 @@
-#FROM ubuntu:latest
-FROM python:3.10
+FROM python:3.10.16-slim AS base
 
 WORKDIR /app
 
-COPY . /app
+COPY config_files/requirements.txt .
 
-RUN rm -rf .env
+COPY config_files/snapshots_ids.json config_files/snapshots_ids.json
 
+RUN pip install -r requirements.txt
 
-#Define environment variable to get dotenv file path
-ARG ENV_FILE_PATH
-COPY $ENV_FILE_PATH /app
+COPY /src /app/src
 
+COPY .env /app
 
-
-# CRON INSTALLATION
-RUN apt-get update && apt-get -y install cron
-COPY config_files/cronfile /etc/cron.d/cronfile
-RUN chmod 0644 /etc/cron.d/cronfile
-RUN crontab /etc/cron.d/cronfile
-RUN touch /var/log/cron.log
-CMD cron && tail -f /var/log/cron.log
-
-RUN chmod 0744 RatPartyMixAPI.py DailyBot.py Bot.py
-
-# INSTALLATION OF REQUIREMENTS
-RUN pip install -r config_files/requirements.txt
-
-RUN ls -la
-
-# ENVIRONMENT VARIABLES
-ENV PORT=8888
-EXPOSE 8888
-
-
-CMD ["cron", "-f"]
+CMD ["uvicorn", "src.RatPartyMixAPI:app", "--host", "0.0.0.0", "--port", "8888"]

@@ -51,6 +51,7 @@ def get_songs_string(songs: list) -> str:
 
 
 def changes_playlist_tweet(songs: list, announcement_file: str) -> None:
+    # TODO move announcement to database
     with open(os.path.join(ANNOUNCEMENTS_PATH, announcement_file), "r") as file:
         announcement_texts = json.load(file)
 
@@ -63,6 +64,7 @@ def changes_playlist_tweet(songs: list, announcement_file: str) -> None:
 
 
 def daily_song_tweet(song: Song) -> None:
+    # TODO move announcement to database
     with open(os.path.join(ANNOUNCEMENTS_PATH, "daily_announcements.json"), "r") as file:
         daily_announcements = json.load(file)
 
