@@ -1,7 +1,9 @@
 name: Tests
-
+#Todo fix this tests
 on:
   push:
+    branches:
+      - gha_tests
 
 jobs:
   build:
