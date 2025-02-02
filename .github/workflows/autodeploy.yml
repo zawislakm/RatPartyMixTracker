@@ -13,7 +13,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4.1.1
       - name: Connect via SSH and deploy new version
-        uses: appleboy/ssh-action@1.0.3
+        uses: appleboy/ssh-action@1.2.0
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
