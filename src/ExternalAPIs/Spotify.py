@@ -1,12 +1,10 @@
 import base64
 import json
-import os
 
 import requests
 from requests import post
 
 from src.Database.models import Song, Artist
-from src.Definitions.definitions import CONFING_FILES
 from src.ExternalAPIs.__init__ import CLIENT_ID, CLIENT_SECRET, RAT_PARTY_MIX_ID
 
 
@@ -57,21 +55,19 @@ def get_song_by_id(song_id: str) -> Song:
     return song
 
 
+def get_playlist_current_snapshot() -> str | None:
+    url = f'https://api.spotify.com/v1/playlists/{RAT_PARTY_MIX_ID}?fields=snapshot_id'
+    response = requests.get(url, headers=SPOTIFY_CONNECTION.headers)
+    if response.status_code != 200:
+        print(f"Failed to get playlist snapshot id: {response.status_code}")
+        return None
+
+    response_json = response.json()
+    return response_json['snapshot_id']
+
+
 def get_playlist_elements() -> list:
-    snapshot_url = f'https://api.spotify.com/v1/playlists/{RAT_PARTY_MIX_ID}?fields=snapshot_id'
-    response = requests.get(snapshot_url, headers=SPOTIFY_CONNECTION.headers)
-    snapshot_response_json = response.json()
-
-    with open(os.path.join(CONFING_FILES, "snapshots_ids.json"), "r") as file:
-        snapshots = json.load(file)
-
-    # TODO move storing snapshots to database
-    if snapshot_response_json['snapshot_id'] == snapshots[-1]:  # no changes on playlist
-        print("No changes on playlist :(")
-        return []
-
     # reading new data
-
     url = f'https://api.spotify.com/v1/playlists/{RAT_PARTY_MIX_ID}/tracks?limit=50'
 
     received_songs = []
@@ -95,11 +91,6 @@ def get_playlist_elements() -> list:
         else:
             # End of requests
             break
-
-    # saving snapshot after successfully requesting data
-    snapshots.append(snapshot_response_json['snapshot_id'])
-    with open(os.path.join(CONFING_FILES, "snapshots_ids.json"), "w") as file:
-        json.dump(snapshots, file)
 
     return received_songs
 

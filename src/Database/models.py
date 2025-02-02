@@ -98,3 +98,10 @@ class DailySong(SQLModel, table=True):
 
     song_date: date = Field(unique_items=True)
     song_id: Optional[int] = Field(default=None, foreign_key="songs.song_id", primary_key=True)
+
+@dataclass()
+class PlaylistSnapshot(SQLModel, table=True):
+    __tablename__ = "playlist_snapshots"
+
+    snapshot_id: str = Field(primary_key=True, unique=True)
+    snapshot_date: datetime = Field(default=datetime.now())

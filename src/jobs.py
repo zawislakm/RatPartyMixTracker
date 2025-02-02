@@ -15,10 +15,12 @@ def get_song_list_from_id(songs: set) -> list:
 
 def check_update() -> None:
     print("Checking for updates...")
-    playlist_api_result = Spotify.get_playlist_elements()
-
-    if not playlist_api_result:  # no updates on playlist :(
+    current_snapshot = Spotify.get_playlist_current_snapshot()
+    if db.check_playlist_snapshot(current_snapshot):
+        print("No updates on playlist")
         return
+
+    playlist_api_result = Spotify.get_playlist_elements()
 
     old_songs = db.get_songs_spotify_ids()
 

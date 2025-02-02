@@ -44,6 +44,12 @@ erDiagram
         int  song_id FK
         date song_date
     }
+    
+    PLAYLIST_SNAPSHOTS {
+        str  snapshot_id PK
+        datetime snapshot_date
+    }
+
 
 ARTISTS ||--o{ SONGS_BY_ARTISTS : "artist_id"
 SONGS ||--o{ SONGS_BY_ARTISTS : "song_id"

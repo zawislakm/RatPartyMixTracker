@@ -6,7 +6,7 @@ from sqlmodel import Session, SQLModel, select
 from sqlmodel import create_engine
 
 from src.Database.__init__ import DATABASE_HOST, DATABASE_USER, DATABASE_PASSWORD, DATABASE_NAME
-from src.Database.models import Song, DailySong, Artist, SongsByArtists
+from src.Database.models import Song, DailySong, Artist, SongsByArtists, PlaylistSnapshot
 
 DATABASE_URL = f'postgresql+psycopg2://{DATABASE_USER}:{DATABASE_PASSWORD}@{DATABASE_HOST}:5432/{DATABASE_NAME}'
 
@@ -196,6 +196,28 @@ def pick_daily_song() -> Song:
         set_daily_song(song_id=song_id, song_date=date.today())
 
         return select_song_by_song_id(song_id)
+
+
+def add_playlist_snapshot(snapshot_id: str) -> None:
+    with Session(ENGINE) as session:
+        snapshot = PlaylistSnapshot(snapshot_id=snapshot_id)
+        session.add(snapshot)
+        session.commit()
+
+
+def check_playlist_snapshot(current_snapshot_id: str) -> bool:
+    with Session(ENGINE) as session:
+        statement = select(PlaylistSnapshot).where(PlaylistSnapshot.snapshot_id == current_snapshot_id)
+        result = session.exec(statement)
+        snapshot = result.first()
+
+        if snapshot is None:
+            snapshot = PlaylistSnapshot(snapshot_id=current_snapshot_id)
+            session.add(snapshot)
+            session.commit()
+            return False
+
+        return True
 
 
 if __name__ == "__main__":
