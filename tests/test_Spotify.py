@@ -1,11 +1,18 @@
 import unittest
 import unittest.mock as mock
+from unittest.mock import patch
 
 from src.Database.models import Song
 from src.ExternalAPIs import Spotify as Spotify
 
 
 class TestSpotify(unittest.TestCase):
+
+    @patch.dict('os.environ', {
+        'CLIENT_ID': 'mock_client_id',
+        'CLIENT_SECRET': 'mock_client_secret',
+        'RAT_PARTY_MIX_ID': 'mock_rat_party_mix_id',
+    })
 
     @mock.patch("requests.get")
     def test_get_song_by_id(self, mock_get):

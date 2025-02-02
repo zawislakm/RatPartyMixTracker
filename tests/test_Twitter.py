@@ -1,5 +1,6 @@
 import unittest
 import unittest.mock as mock
+from unittest.mock import patch
 
 from src.Database.models import Song, Artist
 from src.ExternalAPIs.Twitter import read_photo, remove_photo, get_songs_string, make_tweet
@@ -7,6 +8,13 @@ from src.ExternalAPIs.Twitter import read_photo, remove_photo, get_songs_string,
 
 class TestTwitter(unittest.TestCase):
 
+    @patch.dict('os.environ', {
+        'API_KEY_TWITTER': 'mock_api_key',
+        'API_KEY_SECRET_TWITTER': 'mock_api_key_secret',
+        'BEARER_TOKEN_TWITTER': 'mock_bearer_token',
+        'ACCESS_TOKEN_TWITTER': 'mock_access_token',
+        'ACCESS_TOKEN_SECRET_TWITTER': 'mock_access_token_secret',
+    })
     @mock.patch('requests.get')
     def test_read_photo_success(self, mock_get):
         mock_get.return_value.status_code = 200
