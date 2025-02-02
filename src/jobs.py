@@ -1,5 +1,10 @@
+import logging
+
 from src.Database import Database as db
 from src.ExternalAPIs import Spotify, Twitter
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 
 def post_daily_song() -> None:
@@ -14,10 +19,10 @@ def get_song_list_from_id(songs: set) -> list:
 
 
 def check_update() -> None:
-    print("Checking for updates...")
+    logger.info("Checking for updates...")
     current_snapshot = Spotify.get_playlist_current_snapshot()
-    if db.check_playlist_snapshot(current_snapshot):
-        print("No updates on playlist")
+    if db.check_if_current_snapshot_in_db(current_snapshot):
+        logger.info("No updates on playlist")
         return
 
     playlist_api_result = Spotify.get_playlist_elements()
@@ -30,15 +35,17 @@ def check_update() -> None:
     removed_songs = old_songs - new_songs
 
     if added_songs:
-        print(f"Added songs: {added_songs}")
+        logger.info(f"Added songs: {added_songs}")
         Twitter.changes_playlist_tweet(get_song_list_from_id(added_songs), "add_announcements.json")
 
     if removed_songs:
-        print(f"Removed songs: {removed_songs}")
+        logger.info(f"Removed songs: {removed_songs}")
         Twitter.changes_playlist_tweet(get_song_list_from_id(removed_songs), "remove_announcements.json")
 
     db.remove_songs(removed_songs)
     db.add_songs(playlist_api_result)
+    db.add_playlist_snapshot(current_snapshot)
+
 
 if __name__ == "__main__":
     pass

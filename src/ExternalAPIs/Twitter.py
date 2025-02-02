@@ -1,9 +1,11 @@
 import json
+import logging
 import os
 import random
 
 import requests
 import tweepy
+from tweepy import TweepyException
 
 from src.Database.models import Song
 from src.Definitions.definitions import BOT_PATH, ANNOUNCEMENTS_PATH
@@ -16,6 +18,9 @@ auth = tweepy.OAuth1UserHandler(API_KEY_TWITTER, API_KEY_SECRET_TWITTER, ACCESS_
                                 ACCESS_TOKEN_SECRET_TWITTER)
 API = tweepy.API(auth)
 PHOTO_PATH: str = os.path.join(BOT_PATH, "temp.jpg")
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 
 def read_photo(get_url: str) -> bool:
@@ -75,12 +80,16 @@ def daily_song_tweet(song: Song) -> None:
 
 
 def make_tweet(text: str, song_url: str = None) -> None:
-    if song_url is not None and read_photo(song_url):
-        media = API.media_upload(PHOTO_PATH)
-        Client.create_tweet(text=text, media_ids=[media.media_id])
-        remove_photo()
-    else:
-        Client.create_tweet(text=text)
+    try:
+
+        if song_url is not None and read_photo(song_url):
+            media = API.media_upload(PHOTO_PATH)
+            Client.create_tweet(text=text, media_ids=[media.media_id])
+            remove_photo()
+        else:
+            Client.create_tweet(text=text)
+    except TweepyException as e:
+        logger.info(f"Error while tweeting: {e}")
 
 
 if __name__ == "__main__":

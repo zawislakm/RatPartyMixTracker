@@ -3,7 +3,7 @@ from datetime import date, datetime
 from typing import Optional
 
 from pydantic import PrivateAttr
-from sqlmodel import Field, SQLModel
+from sqlmodel import Field, Relationship, SQLModel
 
 
 @dataclass
@@ -13,6 +13,7 @@ class Artist(SQLModel, table=True):
     spotify_id: str
     artist_name: str
     artist_id: Optional[int] = Field(default=None, primary_key=True)
+    songs: list["SongsByArtists"] = Relationship(back_populates="artist", cascade_delete=True)
 
     def __init__(self, data: dict) -> None:
         super().__init__()
@@ -32,12 +33,13 @@ class Song(SQLModel, table=True):
     added_by: Optional[str] = Field(default=None)
     added_at: Optional[datetime] = Field(default=None)
     song_id: Optional[int] = Field(default=None, primary_key=True)
+    artists: list["SongsByArtists"] = Relationship(back_populates="song", cascade_delete=True)
 
     # not in database
     _song_link: Optional[str] = PrivateAttr(default=None)
     _song_photo_link: Optional[str] = PrivateAttr(default=None)
     _popularity: Optional[int] = PrivateAttr(default=None)
-    _preview_url: Optional[str]  = PrivateAttr(default=None)
+    _preview_url: Optional[str] = PrivateAttr(default=None)
     _artists: Optional[list] = PrivateAttr(default_factory=list)
 
     def __init__(self, data: dict, added_by: str = None, added_at: str = None) -> None:
@@ -90,6 +92,8 @@ class SongsByArtists(SQLModel, table=True):
 
     artist_id: Optional[int] = Field(default=None, foreign_key="artists.artist_id", primary_key=True)
     song_id: Optional[int] = Field(default=None, foreign_key="songs.song_id", primary_key=True)
+    artist: Artist = Relationship(back_populates="songs")
+    song: Song = Relationship(back_populates="artists")
 
 
 @dataclass
@@ -98,6 +102,7 @@ class DailySong(SQLModel, table=True):
 
     song_date: date = Field(unique_items=True)
     song_id: Optional[int] = Field(default=None, foreign_key="songs.song_id", primary_key=True)
+
 
 @dataclass()
 class PlaylistSnapshot(SQLModel, table=True):

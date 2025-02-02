@@ -205,19 +205,12 @@ def add_playlist_snapshot(snapshot_id: str) -> None:
         session.commit()
 
 
-def check_playlist_snapshot(current_snapshot_id: str) -> bool:
+def check_if_current_snapshot_in_db(current_snapshot_id: str) -> bool:
     with Session(ENGINE) as session:
         statement = select(PlaylistSnapshot).where(PlaylistSnapshot.snapshot_id == current_snapshot_id)
         result = session.exec(statement)
         snapshot = result.first()
-
-        if snapshot is None:
-            snapshot = PlaylistSnapshot(snapshot_id=current_snapshot_id)
-            session.add(snapshot)
-            session.commit()
-            return False
-
-        return True
+        return snapshot is not None
 
 
 if __name__ == "__main__":

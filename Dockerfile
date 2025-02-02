@@ -4,7 +4,7 @@ WORKDIR /app
 
 COPY config_files/requirements.txt .
 
-COPY config_files/snapshots_ids.json config_files/snapshots_ids.json
+COPY config_files/announcements_files/ /app/config_files/announcements_files/
 
 RUN pip install -r requirements.txt
 

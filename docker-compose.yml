@@ -1,6 +1,6 @@
 services:
   db:
-    image: postgres:17.2
+    image: postgres:16.3
     container_name: postgres
     environment:
       POSTGRES_DB: ${DATABASE_NAME}
@@ -17,24 +17,10 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: server
-    # TODO make better way to pass env variables
+    env_file: .env
     environment:
-      CLIENT_ID: ${CLIENT_ID}
-      CLIENT_SECRET: ${CLIENT_SECRET}
-      RAT_PARTY_MIX_ID: ${RAT_PARTY_MIX_ID}
-      API_KEY_TWITTER: ${API_KEY_TWITTER}
-      API_KEY_SECRET_TWITTER: ${API_KEY_SECRET_TWITTER}
-      BEARER_TOKEN_TWITTER: ${BEARER_TOKEN_TWITTER}
-      ACCESS_TOKEN_TWITTER: ${ACCESS_TOKEN_TWITTER}
-      ACCESS_TOKEN_SECRET_TWITTER: ${ACCESS_TOKEN_SECRET_TWITTER}
       DATABASE_HOST: db
-      DATABASE_USER: ${DATABASE_USER}
-      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
-      DATABASE_NAME: ${DATABASE_NAME}
-      RAT_PARTY_MIX_API_KEYS: ${RAT_PARTY_MIX_API_KEYS}
-      RAT_PARTY_MIX_SECRET_KEY: ${RAT_PARTY_MIX_SECRET_KEY}
-      ACCESS_TOKEN_EXPIRE_MINUTES: ${ACCESS_TOKEN_EXPIRE_MINUTES}
-      REFRESH_TOKEN_EXPIRE_DAYS: ${REFRESH_TOKEN_EXPIRE_DAYS}
+    restart: always
     depends_on:
       - db
     networks:
