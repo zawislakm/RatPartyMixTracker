@@ -9,6 +9,21 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4.1.1
+      - name: Creating .env file
+        uses: actually-colab/github-action-create-env-file@v2.3
+        with:
+          envkey_DEBUG: false
+          # SPOTIFY API
+          envkey_CLIENT_ID: "mock_client_id"
+          envkey_CLIENT_SECRET: "mock_client_secret"
+          envkey_RAT_PARTY_MIX_ID: "mock_rat_party_mix_id"
+          # TWITTER API
+          envkey_API_KEY_TWITTER: "mock_api_key"
+          envkey_API_KEY_SECRET_TWITTER: "mock_api_key_secret"
+          envkey_BEARER_TOKEN_TWITTER: "mock_bearer_token"
+          envkey_ACCESS_TOKEN_TWITTER: "mock_access_token"
+          envkey_ACCESS_TOKEN_SECRET_TWITTER: "mock_access_token_secret"
+          file_name: .env
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
@@ -17,7 +32,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r config_files/requirements.txt
-      - name : Run tests
+      - name: Run tests
         run: python -m unittest discover -s tests
 
 

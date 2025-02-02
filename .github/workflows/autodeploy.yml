@@ -12,12 +12,11 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4.1.1
-      - name: Connect via SSH and deploy new version
-        uses: appleboy/ssh-action@1.2.0
+      - name: executing remote ssh commands using ssh key
+        uses: appleboy/ssh-action@v1.2.0
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: |
-            //home/ubuntu/RatPartyMixTracker/set-up-server.sh
+          script: whoami
 
