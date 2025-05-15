@@ -1,43 +1,60 @@
 services:
   db:
     image: postgres:16.3
-    container_name: postgres
+    container_name: db
     environment:
       POSTGRES_DB: ${DATABASE_NAME}
       POSTGRES_USER: ${DATABASE_USER}
       POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
-    ports:
-      - "5432:5432"
     volumes:
       - postgres-data:/var/lib/postgresql/data
     networks:
       - server-db
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DATABASE_USER} -d ${DATABASE_NAME}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
   server:
     build:
       context: .
       dockerfile: Dockerfile
+      tags:
+        - server:latest
+    image: server:latest
     container_name: server
     env_file: .env
     environment:
       DATABASE_HOST: db
     restart: always
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     networks:
       - server-db
       - nginx-server
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8888/api/v1/info" ]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
   nginx:
     image: nginx:1.27.3
     container_name: nginx
-    depends_on:
-      - db
-      - server
+    restart: always
     ports:
       - "80:80"
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
     networks:
       - nginx-server
+    depends_on:
+      db:
+        condition: service_healthy
+      server:
+        condition: service_healthy
 
 volumes:
   postgres-data:
