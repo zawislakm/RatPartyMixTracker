@@ -47,9 +47,12 @@ def remove_photo() -> bool:
 def get_songs_string(songs: list) -> str:
     all_songs_list = []
 
-    for song in songs:
+    for song in songs[:3]:
         artists_string = ", ".join(artist.artist_name for artist in song.get_artists())
         all_songs_list.append(f"{song.song_name} from {artists_string}")
+
+    if len(songs) > 3:
+        all_songs_list.append("AND MUCH MORE, CHECK THE PLAYLIST!")
 
     all_songs_string = "\n".join(all_songs_list)
     return all_songs_string
@@ -64,7 +67,6 @@ def changes_playlist_tweet(songs: list, announcement_file: str) -> None:
 
     text = random.choice(announcement_texts)
     text = text.format(get_songs_string(songs), songs[0].song_link)
-
     make_tweet(text, songs[0].song_photo_link)
 
 

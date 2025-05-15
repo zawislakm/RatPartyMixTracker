@@ -41,9 +41,12 @@ class Spotify:
 SPOTIFY_CONNECTION = Spotify()
 
 
-def get_song_by_id(song_id: str) -> Song:
+def get_song_by_id(song_id: str) -> Song | None:
     url = f'https://api.spotify.com/v1/tracks/{song_id}'
     response = requests.get(url, headers=SPOTIFY_CONNECTION.headers)
+    if response.status_code != 200:
+        print(f"Failed to get song by id: {response.status_code}")
+        return None
     response_json = response.json()
 
     song = Song(data=response_json)

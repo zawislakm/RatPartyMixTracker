@@ -11,16 +11,29 @@ def post_daily_song() -> None:
     daily_song = db.get_daily_song()
 
     song_object = Spotify.get_song_by_id(daily_song.spotify_id)
-    Twitter.daily_song_tweet(song_object)
+    if song_object is not None:
+        Twitter.daily_song_tweet(song_object)
 
 
 def get_song_list_from_id(songs: set) -> list:
-    return list(map(lambda x: Spotify.get_song_by_id(x), songs))
+    new_songs = []
+    for song in songs:
+        song_object = Spotify.get_song_by_id(song)
+        if song_object is not None:
+            new_songs.append(song_object)
+        else:
+            logger.error(f"Song with id {song} not found in database")
+            return []
+
+    return new_songs
 
 
 def check_update() -> None:
     logger.info("Checking for updates...")
     current_snapshot = Spotify.get_playlist_current_snapshot()
+    if current_snapshot is None:
+        logger.error("No current snapshot found, skipping update check")
+        return
     if db.check_if_current_snapshot_in_db(current_snapshot):
         logger.info("No updates on playlist")
         return
