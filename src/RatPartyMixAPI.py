@@ -20,7 +20,7 @@ api_router.include_router(dailysong.dailysong_router)
 async def lifespan(app: FastAPI):
     scheduler = AsyncIOScheduler()
     scheduler.add_job(check_update, IntervalTrigger(minutes=30))
-    scheduler.add_job(post_daily_song, CronTrigger(hour=12, minute=0))
+    scheduler.add_job(post_daily_song, CronTrigger(hour=8, minute=0))
     scheduler.start()
     try:
         yield
