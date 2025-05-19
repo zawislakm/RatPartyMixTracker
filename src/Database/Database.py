@@ -181,7 +181,10 @@ def pick_daily_song() -> Song:
         daily_songs_counter = Counter(song.song_id for song in result.all())
 
         songs_ids = list(get_songs_song_ids())
-        avg_daily_appearance = sum(daily_songs_counter.values()) / len(songs_ids)
+        try:
+            avg_daily_appearance = sum(daily_songs_counter.values()) / len(songs_ids)
+        except ZeroDivisionError:
+            avg_daily_appearance = 0
 
         while True:
 
