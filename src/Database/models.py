@@ -101,8 +101,8 @@ class SongsByArtists(SQLModel, table=True):
 class DailySong(SQLModel, table=True):
     __tablename__ = "daily_song"
 
-    song_date: date = Field(unique_items=True)
-    song_id: Optional[int] = Field(default=None, foreign_key="songs.song_id", primary_key=True)
+    song_date: date = Field(primary_key=True)
+    song_id: int = Field(foreign_key="songs.song_id", nullable=False)
     song: Song = Relationship(back_populates="daily_songs")
 
 

@@ -130,36 +130,28 @@ def add_songs(playlist: list) -> None:
 
 
 def get_daily_song() -> Song:
-    if is_daily_song_set_already():
-        # get daily song
-        daily_song = select_daily_song_by_date(date.today())
-    else:
-        # set daily song
+    daily_song = select_daily_song_by_date()
+    if daily_song is None:
         daily_song = pick_daily_song()
 
     return daily_song
 
 
-def is_daily_song_set_already(song_date: date = date.today()) -> bool:
+def select_daily_song_by_date(song_date: date = date.today()) -> Song | None:
     with Session(ENGINE) as session:
         statement = select(DailySong).where(DailySong.song_date == song_date)
         result = session.exec(statement).first()
-        return result is not None
-
-
-def select_daily_song_by_date(song_date: date = date.today()) -> Song:
-    with Session(ENGINE) as session:
-        statement = select(DailySong).where(DailySong.song_date == song_date)
-        result = session.exec(statement).first()
+        if result is None:
+            return None
         daily_song = select_song_by_song_id(result.song_id)
         return daily_song
 
 
 def set_daily_song(song_id: int = None, spotify_id: str = None, song_date: date = date.today()):
-    # if song_date < date.today():
-    #     raise ValueError("You cannot set song for past days")
+    if song_date < date.today():
+        raise ValueError("You cannot set song for past days")
 
-    if is_daily_song_set_already(song_date):
+    if select_daily_song_by_date(song_date) is not None:
         raise ValueError("Daily song for given date is already set")
 
     if spotify_id is not None:

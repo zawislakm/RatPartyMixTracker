@@ -8,6 +8,7 @@ logger = logging.getLogger(__name__)
 
 
 def post_daily_song() -> None:
+    logger.info('Posting daily song')
     daily_song = db.get_daily_song()
 
     song_object = Spotify.get_song_by_id(daily_song.spotify_id)
