@@ -130,14 +130,14 @@ def add_songs(playlist: list) -> None:
 
 
 def get_daily_song() -> Song:
-    daily_song = select_daily_song_by_date()
+    daily_song = select_daily_song_by_date(date.today())
     if daily_song is None:
         daily_song = pick_daily_song()
 
     return daily_song
 
 
-def select_daily_song_by_date(song_date: date = date.today()) -> Song | None:
+def select_daily_song_by_date(song_date: date) -> Song | None:
     with Session(ENGINE) as session:
         statement = select(DailySong).where(DailySong.song_date == song_date)
         result = session.exec(statement).first()
@@ -147,7 +147,7 @@ def select_daily_song_by_date(song_date: date = date.today()) -> Song | None:
         return daily_song
 
 
-def set_daily_song(song_id: int = None, spotify_id: str = None, song_date: date = date.today()):
+def set_daily_song(song_date: date, song_id: int = None, spotify_id: str = None) -> None:
     if song_date < date.today():
         raise ValueError("You cannot set song for past days")
 
