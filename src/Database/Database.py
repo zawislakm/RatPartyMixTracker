@@ -90,7 +90,7 @@ def remove_songs(removed_songs: set) -> None:
             result = session.exec(statement)
             if result is None:
                 continue
-            removed_songs.remove(result.song_id)
+            remove_daily_song(result.song_id)
             removed_song = result.one()
             session.delete(removed_song)
             session.commit()
