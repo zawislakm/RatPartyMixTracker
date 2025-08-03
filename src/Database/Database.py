@@ -88,10 +88,21 @@ def remove_songs(removed_songs: set) -> None:
         for song_spotify_id in removed_songs:
             statement = select(Song).where(Song.spotify_id == song_spotify_id)
             result = session.exec(statement)
+            if result is None:
+                continue
+            removed_songs.remove(result.song_id)
             removed_song = result.one()
             session.delete(removed_song)
             session.commit()
 
+def remove_daily_song(song_id: int) -> None:
+    """Remove daily song by song_id"""
+    with Session(ENGINE) as session:
+        statement = select(DailySong).where(DailySong.song_id == song_id)
+        result = session.exec(statement)
+        removed_daily_song = result.all()
+        session.delete(removed_daily_song)
+        session.commit()
 
 def insert_element(obj) -> int:  # Song | Artist
     with Session(ENGINE) as session:
